@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import au.com.shrinkray.bluetoothscanner.events.DeviceListClearedEvent;
 import au.com.shrinkray.bluetoothscanner.events.DeviceListUpdatedEvent;
 import au.com.shrinkray.bluetoothscanner.events.DeviceScannedEvent;
 import au.com.shrinkray.bluetoothscanner.events.ScanningStartedEvent;
@@ -97,7 +98,7 @@ public class JellyBeanKitKatScanningService extends ScanningService {
 
             mDevicesByAddress.clear();
 
-            EventBus.getDefault().post(new DeviceListUpdatedEvent(new ArrayList<>(mDevicesByAddress.values())));
+            EventBus.getDefault().post(new DeviceListClearedEvent());
 
         }
 

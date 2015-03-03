@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ListView;
 
+import au.com.shrinkray.bluetoothscanner.events.DeviceListClearedEvent;
+import au.com.shrinkray.bluetoothscanner.events.DeviceListUpdatedEvent;
 import au.com.shrinkray.bluetoothscanner.events.DeviceScannedEvent;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -54,6 +56,10 @@ public class DeviceListActivity extends ActionBarActivity {
 
     public void onEventMainThread(DeviceScannedEvent event) {
         mDeviceAdapter.deviceScanned(event.getDevice());
+    }
+
+    public void onEventMainThread( DeviceListClearedEvent event) {
+        mDeviceAdapter.clear();
     }
 
     @Override
