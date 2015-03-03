@@ -6,6 +6,10 @@
           android:title="Start"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/action_start_scanning_old_100"
+          android:title="Start (100ms)"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
     <item android:id="@+id/start_scanning_new_low_latency"
           android:title="Start (Low Latency)"
           android:orderInCategory="100"

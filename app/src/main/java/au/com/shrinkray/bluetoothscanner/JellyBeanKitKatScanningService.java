@@ -23,16 +23,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  */
-public class JellyBeanKitKatScanningService extends Service {
-
-    public static final String ACTION_START_SCANNING = "start_scanning";
-    public static final String ACTION_STOP_SCANNING = "stop_scanning";
-    public static final String ACTION_CLEAR_DEVICE_LIST = "clear_device_list";
-
-    public static final String EXTRA_NAME = "name";
-    public static final String EXTRA_SERVICE_UUID = "service_uuid";
-    public static final String EXTRA_LIMIT = "limit";
-    public static final String EXTRA_UPDATE_SCAN_RECORDS = "update_scan_records";
+public class JellyBeanKitKatScanningService extends ScanningService {
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -72,17 +63,19 @@ public class JellyBeanKitKatScanningService extends Service {
             if (mCallback == null) {
                 UUID serviceUuid = null;
                 String name = null;
+                String address = null;
                 long limit = 0;
                 boolean updateScanRecords = false;
 
                 if (extras != null) {
                     name = extras.getString(EXTRA_NAME,null);
+                    address = extras.getString(EXTRA_ADDRESS,null);
                     serviceUuid = (UUID) extras.getSerializable(EXTRA_SERVICE_UUID);
                     limit = extras.getLong(EXTRA_LIMIT,0);
                     updateScanRecords = extras.getBoolean(EXTRA_UPDATE_SCAN_RECORDS, false);
                 }
 
-                mCallback = new LeScanCallbackImplementation(name,serviceUuid,limit,updateScanRecords);
+                mCallback = new LeScanCallbackImplementation(name,address,serviceUuid,limit,updateScanRecords);
                 mBluetoothAdapter.startLeScan(mCallback);
 
                 // Do not use this version of the call.  It only works for 50% of UUIDs because of a byte conversion bug in the
@@ -117,12 +110,14 @@ public class JellyBeanKitKatScanningService extends Service {
     private class LeScanCallbackImplementation implements BluetoothAdapter.LeScanCallback {
 
         private UUID mUuid;
+        private String mAddress;
         private String mName;
         private long mLimit;
         private boolean mUpdateScanRecords;
 
-        public LeScanCallbackImplementation(String name, UUID uuid, long limit, boolean updateScanRecords) {
+        public LeScanCallbackImplementation(String name, String address, UUID uuid, long limit, boolean updateScanRecords) {
             mName = name;
+            mAddress = address;
             mUuid = uuid;
             mLimit = limit;
             mUpdateScanRecords = updateScanRecords;
@@ -135,7 +130,14 @@ public class JellyBeanKitKatScanningService extends Service {
 
             // Filter by name if we need to.
             if (mName != null) {
-                if (bluetoothDevice.getName().equals(bluetoothDevice)) {
+                if (! bluetoothDevice.getName().equals(bluetoothDevice)) {
+                    return;
+                }
+            }
+
+            // Filter by address if we need to.
+            if (mAddress != null) {
+                if (! bluetoothDevice.getAddress().equals(mAddress)) {
                     return;
                 }
             }
@@ -155,7 +157,7 @@ public class JellyBeanKitKatScanningService extends Service {
                 }
             }
 
-            // Filter by UUID if we need to.
+            // Filter by UUID if we need to.  We do the getAdvertised call
             if (mUuid != null && ! device.getAdvertisedServices().contains(mUuid)) {
                 return;
             }

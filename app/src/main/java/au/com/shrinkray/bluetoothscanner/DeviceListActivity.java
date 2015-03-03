@@ -21,16 +21,16 @@ public class DeviceListActivity extends ActionBarActivity {
     @InjectView(R.id.device_list_listview)
     ListView mDeviceListView;
 
-    @InjectView(R.id.device_list_button)
-    Button mStartStopButton;
-
-    @OnClick(R.id.device_list_button)
-    public void buttonClicked(Button button) {
-        Intent intent = new Intent(this,JellyBeanKitKatScanningService.class);
-        intent.setAction(LollipopScanningService.ACTION_START_SCANNING);
-        intent.putExtra(LollipopScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_LOW_POWER);
-        startService(intent);
-    }
+//    @InjectView(R.id.device_list_button)
+//    Button mStartStopButton;
+//
+//    @OnClick(R.id.device_list_button)
+//    public void buttonClicked(Button button) {
+//        Intent intent = new Intent(this,JellyBeanKitKatScanningService.class);
+//        intent.setAction(LollipopScanningService.ACTION_START_SCANNING);
+//        intent.putExtra(LollipopScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_LOW_POWER);
+//        startService(intent);
+//    }
 
     DeviceAdapter mDeviceAdapter;
 
@@ -71,7 +71,51 @@ public class DeviceListActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_start_scanning_old) {
+            Intent intent = new Intent(this,JellyBeanKitKatScanningService.class);
+            intent.setAction(JellyBeanKitKatScanningService.ACTION_START_SCANNING);
+            // intent.putExtra(JellyBeanKitKatScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_LOW_POWER);
+            startService(intent);
+            return true;
+        } else if (id == R.id.action_start_scanning_old_100) {
+            Intent intent = new Intent(this,JellyBeanKitKatScanningService.class);
+            intent.setAction(JellyBeanKitKatScanningService.ACTION_START_SCANNING);
+            intent.putExtra(JellyBeanKitKatScanningService.EXTRA_LIMIT, 100l);
+            startService(intent);
+            return true;
+        } else if (id == R.id.start_scanning_new_low_power) {
+            Intent intent = new Intent(this,LollipopScanningService.class);
+            intent.setAction(LollipopScanningService.ACTION_START_SCANNING);
+            intent.putExtra(LollipopScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_BALANCED);
+            startService(intent);
+            return true;
+        } else if (id == R.id.start_scanning_new_balanced) {
+            Intent intent = new Intent(this,LollipopScanningService.class);
+            intent.setAction(LollipopScanningService.ACTION_START_SCANNING);
+            intent.putExtra(LollipopScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_LOW_LATENCY);
+            startService(intent);
+            return true;
+        } else if (id == R.id.start_scanning_new_low_latency) {
+            Intent intent = new Intent(this,LollipopScanningService.class);
+            intent.setAction(LollipopScanningService.ACTION_START_SCANNING);
+            intent.putExtra(LollipopScanningService.EXTRA_SCAN_MODE, ScanSettings.SCAN_MODE_LOW_POWER);
+            startService(intent);
+            return true;
+        } else if (id == R.id.action_stop_scanning) {
+            Intent intent = new Intent(this,JellyBeanKitKatScanningService.class);
+            intent.setAction(LollipopScanningService.ACTION_STOP_SCANNING);
+            startService(intent);
+            Intent intent2 = new Intent(this,LollipopScanningService.class);
+            intent2.setAction(LollipopScanningService.ACTION_STOP_SCANNING);
+            startService(intent2);
+            return true;
+        } else if (id == R.id.action_clear) {
+            Intent intent = new Intent(this,LollipopScanningService.class);
+            intent.setAction(LollipopScanningService.ACTION_CLEAR_DEVICE_LIST);
+            startService(intent);
+            Intent intent2 = new Intent(this,JellyBeanKitKatScanningService.class);
+            intent2.setAction(LollipopScanningService.ACTION_CLEAR_DEVICE_LIST);
+            startService(intent2);
             return true;
         }
 

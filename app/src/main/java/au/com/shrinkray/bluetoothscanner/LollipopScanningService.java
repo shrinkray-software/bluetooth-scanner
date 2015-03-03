@@ -32,18 +32,7 @@ import de.greenrobot.event.EventBus;
 /**
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class LollipopScanningService extends Service {
-
-    public static final String ACTION_START_SCANNING = "start_scanning";
-    public static final String ACTION_STOP_SCANNING = "stop_scanning";
-    public static final String ACTION_CLEAR_DEVICE_LIST = "clear_device_list";
-
-    public static final String EXTRA_NAME = "name";
-    public static final String EXTRA_ADDRESS = "address";
-    public static final String EXTRA_SERVICE_UUID = "service_uuid";
-    public static final String EXTRA_LIMIT = "limit";
-    public static final String EXTRA_UPDATE_SCAN_RECORDS = "update_scan_records";
-    public static final String EXTRA_SCAN_MODE = "scan_mode";
+public class LollipopScanningService extends ScanningService {
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -77,10 +66,6 @@ public class LollipopScanningService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if ( intent == null ) {
-            return START_NOT_STICKY;
-        }
-
-        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ) {
             return START_NOT_STICKY;
         }
 
@@ -164,7 +149,7 @@ public class LollipopScanningService extends Service {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
 
-            long scanTime = result.getTimestampNanos();
+            long scanTime = System.currentTimeMillis();
 
             Device device = mDevicesByAddress.get(result.getDevice().getAddress());
             BluetoothDevice bluetoothDevice = result.getDevice();
